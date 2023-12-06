@@ -33,22 +33,18 @@ async function logEntry(newState, entry) {
             channel.send(`\`\`\`User ${entry.username} joined the voice channel at ${entry.timestamp}\`\`\``);
         }
 
-        const today = moment().tz('Asia/Bangkok').startOf('day'); // เวลาเริ่มต้นของวันนี้
+        const today = moment().tz('Asia/Bangkok').startOf('day');
         const userId = entry.userId;
 
-        // ตรวจสอบว่าเป็นการเข้า Discord ครั้งแรกของวันหรือไม่
         if (!userTimeMap.has(userId) || !userTimeMap.get(userId).lastJoinDate.isSame(today, 'day')) {
-            // ถ้าเป็นครั้งแรกของวัน หรือไม่ได้เข้าเมื่อวาน
             userTimeMap.set(userId, {
                 joinTime: entry.timestamp,
                 lastJoinDate: today,
             });
 
-            // สร้างหรืออัพเดทข้อมูลใน MongoDB
-            await saveTotalTime(userId, entry.username, 0); // สร้าง index ใหม่ทุกรอบเข้า
+            await saveTotalTime(userId, entry.username, 0);
 
         } else {
-            // ถ้าเข้าและออกแล้วในวันเดียว ไม่ต้องทำอะไร
         }
 
     } catch (error) {
